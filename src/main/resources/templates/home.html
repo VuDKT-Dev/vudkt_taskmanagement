@@ -1,10 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Todo Homepage</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/fontawesome/css/all.min.css}">
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/fontawesome/js/all.js}"></script>
+    <script th:src="@{/jquery/jquery.min.js}"></script>
+    <link th:href="@{/customcss/style.css}" rel="stylesheet">
+
 </head>
-<body>
-$END$
+<body class="vh-100 gradient-custom-2">
+<div class="container py-5 h-100">
+    <div class="toast-container position-fixed start-50 translate-middle-x rounded"
+         style="width: 20rem; height: 10rem; top: 2rem">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body bg-success text-white fw-semibold rounded" th:text="${message}">
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-12 col-xl-12">
+            <div class="text-center pt-5 bg-white rounded-top">
+                <img th:src="@{/images/check1.webp}"
+                     alt="Check" width="60">
+                <h2 class="my-4">Task List</h2>
+                <ul class="nav nav-tabs w-100" id="myTab" role="tablist">
+                    <li class="nav-item w-50" role="presentation">
+                        <button class="nav-link active w-100" id="home-tab" data-bs-toggle="tab"
+                                data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                                aria-selected="true">In Active
+                        </button>
+                    </li>
+                    <li class="nav-item w-50" role="presentation">
+                        <button class="nav-link w-100" id="complete-tab" data-bs-toggle="tab"
+                                data-bs-target="#complete-tab-pane" type="button" role="tab"
+                                aria-controls="profile-tab-pane" aria-selected="false">Completed
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+                     tabindex="0">
+                    <div class="card rounded-top-0">
+                        <div class="card-body overflow-y-auto" style="position: relative; height: 600px">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="text-uppercase fw-bold">Title</th>
+                                    <th scope="col" class="text-uppercase fw-bold">Content</th>
+                                    <th scope="col" class="text-uppercase fw-bold">Priority</th>
+                                    <th scope="col" class="text-uppercase fw-bold text-center">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="todo : ${todoList}" class="fw-normal" th:if="${todo.isComplete() != true}">
+                                    <td>
+                                        <span class="text-lg-start" th:text="${todo.title}"></span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span th:text="${todo.content}"></span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <h6 class="mb-0"><span class="badge bg-primary text-capitalize"
+                                                               th:text="${todo.priority}"></span></h6>
+                                    </td>
+                                    <td class="d-flex justify-content-end align-items-center gap-1">
+                                        <form th:action="@{/completed/{id} (id = ${todo.id})}" method="post">
+                                            <button type="submit" class="btn btn-primary">Completed</button>
+                                        </form>
+                                        <a th:href="@{/update/{id} (id = ${todo.id})}"
+                                           class="btn btn-success">Update</i></a>
+                                        <form th:action="@{/delete/{id} (id = ${todo.id})}" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="card-footer text-end p-3">
+                            <a th:href="@{/create}" class="btn btn-primary">Add Task</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="complete-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+                     tabindex="0">
+                    <div class="card">
+                        <div class="card-body overflow-y-auto" style="position: relative; height: 600px">
+                            <table class="table mb-0">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="text-uppercase fw-bold">Title</th>
+                                    <th scope="col" class="text-uppercase fw-bold">Content</th>
+                                    <th scope="col" class="text-uppercase fw-bold">Priority</th>
+                                    <th scope="col" class="text-uppercase fw-bold">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="todo : ${todoList}" class="fw-normal" th:if="${todo.isComplete() == true}">
+                                    <th>
+                                        <span class="text-lg-start text-decoration-line-through"
+                                              th:text="${todo.title}"></span>
+                                    </th>
+                                    <td class="align-middle">
+                                        <span class="text-decoration-line-through" th:text="${todo.content}"></span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <h6 class="mb-0"><span
+                                                class="badge bg-danger text-capitalize text-decoration-line-through"
+                                                th:text="${todo.priority}"></span></h6>
+                                    </td>
+                                    <td class="align-middle d-flex justify-content-end align-items-center gap-1">
+                                        <form th:action="@{/completed/{id} (id = ${todo.id})}" method="post">
+                                            <button type="submit" class="btn btn-primary">Uncompleted</button>
+                                        </form>
+                                        <form th:action="@{/delete/{id} (id = ${todo.id})}" method="post">
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="card-footer text-end p-3">
+                            <a th:href="@{/create}" class="btn btn-primary">Add Task</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    window.onload = function () {
+        const toastLiveExample = document.getElementById('liveToast')
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        const toastBody = document.querySelector('.toast-body')
+        if (toastBody.textContent !== '') {
+            toastBootstrap.show()
+            toastBootstrap.options = {
+                "delay": 3000
+            }
+        }
+    }
+</script>
 </body>
 </html>
