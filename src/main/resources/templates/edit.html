@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Task</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/customcss/style.css}" rel="stylesheet">
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body class="vh-100 gradient-custom-2">
+<div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="card px-5">
+            <h2 class="text-center py-4 fw-bold text-uppercase">Edit task</h2>
+            <form th:action="@{http://localhost:8080/update}" method="post" th:object="${todo}">
+                <input type="text" th:field="*{id}" hidden="hidden"/>
+                <!-- TitleName input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label  fw-semibold text-lg-start" for="formTilte">Title</label>
+                    <input type="text" id="formTilte" class="form-control" th:field="*{title}"/>
+                </div>
+
+                <!-- Priority select -->
+                <div class="form-outline mb-4">
+                    <select class="form-control" th:field="*{priority}">
+                        <option value="">Priority Select</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <input type="checkbox" th:checked="*{isComplete()}" hidden="hidden"/>
+                <!-- Content input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label fw-semibold text-lg-start" for="formContent">Content</label>
+                    <textarea class="form-control" id="formContent" rows="4" th:field="*{content}"></textarea>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block float-end px-5 py-3 mb-4">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
