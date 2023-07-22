@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -18,7 +17,18 @@ public class TodoController {
     TodoService todoService;
 
     @GetMapping
-    public String index(Model model) {
+    public String index(@RequestParam(value = "filter", required = false) String filter,
+                        @RequestParam(value = "search", required = false) String search,
+                        Model model) {
+        if (filter != null) {
+            ArrayList<Todo> todoList = (ArrayList<Todo>) todoService.filterByPriority(filter);
+            model.addAttribute("todoList", todoList);
+            return "home";
+        } else if (search != null) {
+            ArrayList<Todo> todoList = (ArrayList<Todo>) todoService.search(search);
+            model.addAttribute("todoList", todoList);
+            return "home";
+        }
         ArrayList<Todo> todoList = (ArrayList<Todo>) todoService.getAll();
         model.addAttribute("todoList", todoList);
         return "home";

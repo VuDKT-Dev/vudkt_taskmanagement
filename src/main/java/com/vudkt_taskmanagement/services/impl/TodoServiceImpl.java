@@ -5,7 +5,10 @@ import com.vudkt_taskmanagement.repositories.TodoRepository;
 import com.vudkt_taskmanagement.services.TodoService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -20,12 +23,26 @@ public class TodoServiceImpl implements TodoService {
         return todoRepository.findAll();
     }
 
+    @Override
+    public List<Todo> search(String search) {
+        List<Todo> searchByTitle = todoRepository.findByTitle(search);
+        List<Todo> searchByContent = todoRepository.findByContent(search);
+
+        return Stream.concat(searchByTitle.stream(), searchByContent.stream()).collect(Collectors.toList());
+    }
+
 
     @Override
     public Todo getTodoById(Long id) {
         return todoRepository.findById(id).get();
 
     }
+
+    @Override
+    public List<Todo> filterByPriority(String priority) {
+        return todoRepository.findByPriority(priority);
+    }
+
 
     @Override
     public boolean updateCompleted(Long id) {
